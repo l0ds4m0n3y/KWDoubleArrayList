@@ -1,5 +1,4 @@
 import java.util.AbstractSequentialList;
-import java.util.Iterator;
 import java.util.ListIterator;
 import java.util.NoSuchElementException;
 
@@ -23,8 +22,8 @@ public class KWLinkedList<E> extends AbstractSequentialList<E> {
 	 * @return a ListIterator that begins at index
 	 */
 	public ListIterator<E> listIterator(int index) {
-		// TODO implement this method
-		throw new RuntimeException("Method not implemented");
+		ListIterator<E> iter = new KWListIter(index);
+		return iter;
 	}
 	
 	/**
@@ -35,8 +34,13 @@ public class KWLinkedList<E> extends AbstractSequentialList<E> {
 	 */
 	@Override
 	public int indexOf(Object target) {
-		// TODO Implement this method
-		throw new RuntimeException( "Method not implemented." );
+		int i = 0;
+		ListIterator<E> iter = this.listIterator(i);
+		while(iter.hasNext()){
+			if(iter.next().equals(target)) return i;
+			i++;
+		}
+		return -1;
 	}
 
 	/**
@@ -47,8 +51,13 @@ public class KWLinkedList<E> extends AbstractSequentialList<E> {
 	 */
 	@Override
 	public int lastIndexOf(Object target) {
-		// TODO Implement this method
-		throw new RuntimeException( "Method not implemented." );
+		int i = this.size - 1;
+		ListIterator<E> iter = this.listIterator(i);
+		while(iter.hasPrevious()){
+			if(iter.previous().equals(target)) return i;
+			i--;
+		}
+		return -1;
 	}
 
 	/**
@@ -287,7 +296,10 @@ public class KWLinkedList<E> extends AbstractSequentialList<E> {
 		 */
 		@Override
 		public void set(E item) {
-			// TODO Implement this method
+			if(this.previous() == null || this.nextItem == null) throw new IllegalStateException();
+			Node<E> ptr = new Node(item);
+			ptr.next = nextItem;
+			nextItem.prev = ptr;
 		}
 
 		/** Remove the last item returned. This can only be
@@ -297,7 +309,10 @@ public class KWLinkedList<E> extends AbstractSequentialList<E> {
 		 */
 		@Override
 		public void remove() {
-			// TODO Implement this method
+			if(this.previous() == null || this.nextItem == null) throw new IllegalStateException();
+			Node<E> ptr = lastItemReturned;
+			ptr.prev = ptr.prev.prev;
+			ptr.next = ptr.next.next;
 		}
 
 	} //end class KWListIter
