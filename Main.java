@@ -7,12 +7,16 @@ public class Main {
         myList.add(1,"B");
         myList.add(2,"C");
         myList.add(3,"D");
-        myList.add(4,"B");
 
         ListIterator<String> iter = myList.listIterator(0);
-        System.out.println(myList.lastIndexOf("B"));
-        while(iter.hasNext()){
-            System.out.println(iter.next());
+        ListIterator<String> iterter = myList.listIterator(0);
+
+        //System.out.println(myList.indexOf("B"));
+        iter.next();
+        iter.remove(); //1B
+
+        while(iterter.hasNext()){
+            System.out.println(iterter.next());
         }
         
     }

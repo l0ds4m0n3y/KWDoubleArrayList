@@ -21,7 +21,7 @@ public class KWLinkedList<E> extends AbstractSequentialList<E> {
 	 * @param index - The position the iteration is to begin
 	 * @return a ListIterator that begins at index
 	 */
-	public ListIterator<E> listIterator(int index) {
+	public ListIterator<E> listIterator(int index) { //TODO
 		ListIterator<E> iter = new KWListIter(index);
 		return iter;
 	}
@@ -33,7 +33,7 @@ public class KWLinkedList<E> extends AbstractSequentialList<E> {
 	 *         or -1 if the item is not found.
 	 */
 	@Override
-	public int indexOf(Object target) {
+	public int indexOf(Object target) { //TODO
 		int i = 0;
 		ListIterator<E> iter = this.listIterator(i);
 		while(iter.hasNext()){
@@ -50,7 +50,7 @@ public class KWLinkedList<E> extends AbstractSequentialList<E> {
 	 *         or -1 if the item is not found.
 	 */
 	@Override
-	public int lastIndexOf(Object target) {
+	public int lastIndexOf(Object target) { //TODO
 		int i = this.size - 1;
 		ListIterator<E> iter = this.listIterator(i);
 		while(iter.hasPrevious()){
@@ -190,7 +190,7 @@ public class KWLinkedList<E> extends AbstractSequentialList<E> {
 		 * @return true if call to previous will not throw an exception
 		 */
 		@Override
-		public boolean hasPrevious() {
+		public boolean hasPrevious() { //TODO
 
 			return (index>0);
 
@@ -296,10 +296,13 @@ public class KWLinkedList<E> extends AbstractSequentialList<E> {
 		 */
 		@Override
 		public void set(E item) {
-			if(this.previous() == null || this.nextItem == null) throw new IllegalStateException();
-			Node<E> ptr = new Node(item);
-			ptr.next = nextItem;
-			nextItem.prev = ptr;
+			if(this.lastItemReturned == null) throw new IllegalStateException();
+			Node<E> obj = new Node<>(item);
+			Node<E> ptr = lastItemReturned;
+			obj.next = lastItemReturned.next;
+			obj.prev = lastItemReturned.prev;
+			ptr.next.prev = obj;
+			ptr.prev.next = obj;
 		}
 
 		/** Remove the last item returned. This can only be
@@ -308,15 +311,22 @@ public class KWLinkedList<E> extends AbstractSequentialList<E> {
 		 *  was not called prior to calling this method
 		 */
 		@Override
-		public void remove() {
-			if(this.previous() == null || this.nextItem == null) throw new IllegalStateException();
+		public void remove() { //TODO
+			if(this.lastItemReturned == null) throw new IllegalStateException();
 			Node<E> ptr = lastItemReturned;
-			ptr.prev = ptr.prev.prev;
-			ptr.next = ptr.next.next;
+			if(ptr.prev == null){ //TODO
+				head = ptr.next;
+				ptr.next.prev = null;
+			}
+			else if(ptr.next == null){ //TODO
+				ptr.prev.next = null;
+			} 
+			else{
+				ptr.next.prev = ptr.prev;
+				ptr.prev.next = ptr.next;
+			}	
 		}
 
 	} //end class KWListIter
-
-
 
 }//KWLinkedList<E>
