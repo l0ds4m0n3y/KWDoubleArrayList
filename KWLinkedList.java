@@ -21,9 +21,8 @@ public class KWLinkedList<E> extends AbstractSequentialList<E> {
 	 * @param index - The position the iteration is to begin
 	 * @return a ListIterator that begins at index
 	 */
-	public ListIterator<E> listIterator(int index) { //TODO
-		ListIterator<E> iter = new KWListIter(index);
-		return iter;
+	public ListIterator<E> listIterator(int index) {
+		return new KWListIter(index);
 	}
 	
 	/**
@@ -51,10 +50,10 @@ public class KWLinkedList<E> extends AbstractSequentialList<E> {
 	 */
 	@Override
 	public int lastIndexOf(Object target) { //TODO
-		int i = this.size - 1;
+		int i = this.size;
 		ListIterator<E> iter = this.listIterator(i);
 		while(iter.hasPrevious()){
-			if(iter.previous().equals(target)) return i;
+			if(iter.previous().equals(target)) return i - 1;
 			i--;
 		}
 		return -1;
@@ -297,12 +296,7 @@ public class KWLinkedList<E> extends AbstractSequentialList<E> {
 		@Override
 		public void set(E item) {
 			if(this.lastItemReturned == null) throw new IllegalStateException();
-			Node<E> obj = new Node<>(item);
-			Node<E> ptr = lastItemReturned;
-			obj.next = lastItemReturned.next;
-			obj.prev = lastItemReturned.prev;
-			ptr.next.prev = obj;
-			ptr.prev.next = obj;
+			lastItemReturned.data = item;
 		}
 
 		/** Remove the last item returned. This can only be
@@ -311,20 +305,28 @@ public class KWLinkedList<E> extends AbstractSequentialList<E> {
 		 *  was not called prior to calling this method
 		 */
 		@Override
-		public void remove() { //TODO
+		public void remove() {
 			if(this.lastItemReturned == null) throw new IllegalStateException();
 			Node<E> ptr = lastItemReturned;
-			if(ptr.prev == null){ //TODO
-				head = ptr.next;
-				ptr.next.prev = null;
+			if(ptr.prev == null && ptr.next == null){
+				head = null;
+				tail = null;
 			}
-			else if(ptr.next == null){ //TODO
-				ptr.prev.next = null;
-			} 
-			else{
+			else if(ptr.prev == null){
+				head = ptr.next;
 				ptr.next.prev = ptr.prev;
+			}
+			else if(ptr.next == null){
+				tail = tail.prev;
+				tail.next = null;
+				ptr.prev = null;
+			}
+			else{
 				ptr.prev.next = ptr.next;
-			}	
+				ptr.next.prev = ptr.prev;
+			}
+			lastItemReturned = null;
+			size--;	
 		}
 
 	} //end class KWListIter
